@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:projectTemplate xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://fdt.powerflasher.com/ProjectTemplate ../../projectTemplate.xsd">
+	<name>Basic Flash</name>
+	<projectType>Web</projectType>
+	<version>2.5</version>
+	<description>This template will create a Haxe / Flash example project.</description>
+	<variables>
+		<primaryGroup label="">
+				<variable name="swfVersion" label="SWF Version:" default="AVM2 (Flash 9+)"
+					type="enum('AVM 1 (Flash 1-8)','AVM2 (Flash 9+)')" >
+					</variable>	
+					<variable name="mainClassName" label="Main Class:" type="string" default="Main"></variable>
+		</primaryGroup>
+	</variables>
+	
+	<extensions>
+		<haxe>
+			<hxmlPath>compile.hxml</hxmlPath>
+			<mainClass>${mainClassName}</mainClass>
+			<outputPath>bin/swf/Main.swf</outputPath>
+			<outputType>${selectedSWFVersion}</outputType>
+		</haxe>
+	</extensions>	
+
+	<expressions>
+		<expression name='selectedSWFVersion' value="if(${swfVersion}=='AVM 1 (Flash 1-8)','Flash SWF', 'Flash9 SWF')">
+		</expression>
+	</expressions>
+	
+	<folders>
+		<sourceFolder>src</sourceFolder>		
+		<outputFolder>placeholder</outputFolder>
+	</folders>
+	
+	<contentCreation processFileExtensions="as,mxml,xml,launch,html,hx">
+		
+		<file src="src/Main.hx" dest="src/${mainClassName}.hx" process="true"/>	
+	</contentCreation>
+	
+</tns:projectTemplate>

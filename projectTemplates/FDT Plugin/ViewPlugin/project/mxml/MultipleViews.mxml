@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application
+               xmlns:fx           ="http://ns.adobe.com/mxml/2009"
+               xmlns:s            ="library://ns.adobe.com/flex/spark"
+               implements         ="swf.plugin.ISwfViewPlugin"
+               applicationComplete="start()"
+               >
+	<fx:Metadata>
+		[FdtSwfPlugin(name="${projectName}", pluginType="views", toolTip="A Flex View")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			import swf.bridge.FdtViewBridge;
+
+			private var _fdtViewBridge : FdtViewBridge;
+
+			private function start() : void {
+			FdtSwfPluginIcon;
+			_fdtViewBridge = new FdtViewBridge(loaderInfo, this);
+			}
+
+			public function init() : void {
+			}
+
+			public function setSize(width : int, height : int) : void {
+				this.width = width;
+				this.height = height;
+			}
+
+			public function setOptions(options : Dictionary) : void {
+			}
+
+			public function dialogClosed(dialogInstanceId : String, result : String) : void {
+			}
+		]]>
+	</fx:Script>
+
+</s:Application>

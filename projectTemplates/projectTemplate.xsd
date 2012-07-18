@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://fdt.powerflasher.com/ProjectTemplate"
+	xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate">
+	<element name="projectTemplate">
+		<complexType>
+			<sequence>
+				<element name="name" type="string"></element>
+				<element name="version" type="string"></element>
+				<element name="variables" type="tns:Variables" minOccurs="0"
+					maxOccurs="1"></element>
+				<element name="expressions" type="tns:Expressions"
+					minOccurs="0" maxOccurs="1"></element>
+				<element name="description" type="string"></element>
+				<element name="projectType" type="string"></element>
+				<element name="projectPlatforms" type="tns:ProjectPlatforms"
+					minOccurs="0" maxOccurs="1"></element>
+				<element name="folders" type="tns:Folders"></element>
+				<element name="libraries" type="tns:Libraries" minOccurs="0"
+					maxOccurs="1"></element>
+				<element name="linkedResources" type="tns:LinkedResources"
+					minOccurs="0" maxOccurs="1"></element>
+				<element name="extensions" type="tns:Extensions" minOccurs="0"
+					maxOccurs="1"></element>
+				<element name="contentCreation" type="tns:ContentCreation"
+					minOccurs="0" maxOccurs="1"></element>
+				<element name="antCall" type="tns:AntCall" minOccurs="0"
+					maxOccurs="1"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="Folders">
+		<sequence>
+			<element name="sourceFolder" type="tns:ConditionString"
+				minOccurs="1" maxOccurs="unbounded">
+			</element>
+			<element name="autoLibFolder" type="tns:ConditionString"
+				minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="outputFolder" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="ProjectPlatforms">
+		<sequence>
+			<element name="mobilePlatform" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Libraries">
+		<sequence>
+			<element name="swc" type="tns:Swc" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Swc">
+		<sequence>
+			<element name="path" type="string"></element>
+			<element name="asDoc" type="string" minOccurs="0"></element>
+			<element name="source" type="string" minOccurs="0"></element>
+		</sequence>
+		<attribute name="if" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="LinkedResources">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="linkedFolder" type="tns:LinkedResource"></element>
+			<element name="linkedFile" type="tns:LinkedResource"></element>
+		</choice>
+	</complexType>
+
+	<complexType name="LinkedResource">
+		<sequence>
+			<element name="path" type="string"></element>
+			<choice>
+				<element name="location" type="string"></element>
+				<element name="locationURI" type="string"></element>
+			</choice>
+		</sequence>
+		<attribute name="if" use="optional" default="true"></attribute>
+	</complexType>
+
+
+	<complexType name="Extensions">
+		<sequence>
+			<any processContents="strict" namespace="##other" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Variables">
+		<sequence>
+			<element name="primaryGroup" type="tns:Group" minOccurs="0"
+				maxOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+
+	<complexType name="Variable">
+		<attribute name="name" use="required" type="string"></attribute>
+		<attribute name="label" use="required" type="string"></attribute>
+		<attribute name="description" use="optional" default=""
+			type="string"></attribute>
+		<attribute name="type" use="required"></attribute>
+		<attribute name="default" use="required"></attribute>
+		<attribute name="enableIf" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="Hyperlink">
+		<attribute name="label" use="required" type="string"></attribute>
+		<attribute name="description" use="optional" default=""
+			type="string"></attribute>
+		<attribute name="target" use="required"></attribute>
+		<attribute name="style" use="optional" type="string"
+			default="" />
+		<attribute name="enableIf" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="Group">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="variable" type="tns:Variable"></element>
+			<element name="group" type="tns:Group"></element>
+			<element name="hyperlink" type="tns:Hyperlink"></element>
+		</choice>
+		<attribute name="label" use="required" type="string"></attribute>
+		<attribute name="description" use="optional" default=""
+			type="string"></attribute>
+		<attribute name="style" use="optional" type="string"
+			default="" />
+		<attribute name="enableIf" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="Expressions">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="expression" type="tns:Expression"></element>
+			<element name="map" type="tns:Map"></element>
+		</choice>
+	</complexType>
+
+	<complexType name="Expression">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" use="required"></attribute>
+				<attribute name="value" use="optional"></attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+
+	<complexType name="Map">
+		<sequence>
+			<element name="entry" type="tns:Entry" minOccurs="0"
+				maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="name" use="required"></attribute>
+	</complexType>
+
+	<complexType name="Entry">
+		<attribute name="key" use="required"></attribute>
+		<attribute name="value" use="required"></attribute>
+	</complexType>
+
+	<complexType name="ConditionString">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="if" type="string" use="optional" default="true"></attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+
+	<complexType name="ContentCreation">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="folder" type="tns:Folder"></element>
+			<element name="file" type="tns:File"></element>
+		</choice>
+		<attribute name="processFileExtensions" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="Folder">
+		<attribute name="src" type="string" use="required"></attribute>
+		<attribute name="dest" type="string" use="optional"></attribute>
+		<attribute name="recursive" type="string" use="optional"
+			default="true"></attribute>
+		<attribute name="process" type="string" use="optional"
+			default="true"></attribute>
+		<attribute name="if" type="string" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="File">
+		<attribute name="src" type="string" use="required"></attribute>
+		<attribute name="dest" type="string" use="optional"></attribute>
+		<attribute name="process" type="string" use="optional"
+			default="true"></attribute>
+		<attribute name="if" type="string" use="optional" default="true"></attribute>
+	</complexType>
+
+	<complexType name="AntCall">
+		<attribute name="antFile" type="string" use="required"></attribute>
+		<attribute name="if" type="string" use="optional" default="true"></attribute>
+	</complexType>
+
+</schema>

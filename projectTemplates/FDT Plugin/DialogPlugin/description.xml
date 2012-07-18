@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:projectTemplate xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://fdt.powerflasher.com/ProjectTemplate ../../projectTemplate.xsd">
+	<name>Dialog Plugin</name>
+	<version>2.5</version>
+	<projectType>${projectTypeExpression}</projectType>
+	<variables>
+		<primaryGroup label="">
+			<group label='Project Setup'>
+				<variable name="selectedSDK" label="Default SDK" default="_highest" type="sdk(3.6,4.9,1.0,4)" />												
+				<variable name="useFlex" label="Add Flex Framework" default="false" type="boolean" />				
+			</group>
+		</primaryGroup>
+	</variables>
+	<expressions>
+		<expression name="sourceFolder" value="src" />
+		<expression name="outputFolder" value="bin" />
+		<expression name="preferredSdk" value="${selectedSDK}"/>
+		<expression name="pluginIconImport" value="concat('FdtSwfPluginIcon;')" />
+		<expression name="projectTypeExpression" value="concat('FDT Plugin',if(${useFlex},' Flex',''))" />
+		<expression name='isFlex3' value="sdkHasLib(${selectedSDK},'frameworks/libs/flex.swc')  &amp;&amp; ${useFlex}"/>		
+		<expression name='isFlex4' value="sdkHasLib(${selectedSDK},'frameworks/libs/mx/mx.swc')  &amp;&amp; ${useFlex}"/>		
+	</expressions>
+	<description>This template will create a project named '${projectName}' which contains only the basic libraries to develop and compile a FDT Dialog Plugin.${newline}A FDT Dialog plugin can be used to create pop-up-like Panels like Wizards or setting dialogs. Their UI is build with Actionscript or Flex. Dialog plugins are only active while opened and can only be started by other plugins, usually action plugins.</description>
+	<linkedResources></linkedResources>
+	<folders>
+		<sourceFolder>${sourceFolder}</sourceFolder>
+		<outputFolder>${outputFolder}</outputFolder>
+		<autoLibFolder>lib</autoLibFolder>
+	</folders>
+	<contentCreation processFileExtensions="as,mxml,xml,launch,html">
+		<!-- Always -->
+		<file src="as/FdtSwfPluginIcon.as" dest="src/FdtSwfPluginIcon.as" process="true" />
+		
+		<!-- If AS -->		
+		<file src="as/Main.as" dest="src/Main.as" process="true" if="!${useFlex}" />
+		<!-- If Flex 3 -->
+		<file src="mxml/Main_flex3.mxml" dest="src/Main.mxml" process="true" if="${isFlex3}" />
+		<!-- If Flex 4 -->
+		<file src="mxml/Main.mxml" dest="src/Main.mxml" process="true" if="${isFlex4}" />
+		
+
+		<folder src="swc" dest="lib" process="true" />
+		<folder src="assets" dest="assets" process="true"/>
+	</contentCreation>
+</tns:projectTemplate>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:projectTemplate xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://fdt.powerflasher.com/ProjectTemplate ../../projectTemplate.xsd">
+	<name>Action Plugin</name>
+	<version>2.5</version>
+	<projectType>FDT Plugin</projectType>
+	<variables>
+		<primaryGroup label="">
+			<group label='Project Setup'>
+				<variable name="selectedSDK" label="Default SDK" default="_highest" type="sdk(4.5,4.9,2.6,4)" />												
+			</group>
+		</primaryGroup>
+	</variables>
+	<expressions>
+		<expression name="sourceFolder" value="src" />
+		<expression name="outputFolder" value="bin" />
+	</expressions>
+	<description>FDT Action Plugins are running in the background of FDT. Unlike View or Dialog plugins, they are always active and allow you to create custom code assists like quickfixes or autocompletions, register menu entries or to start up dialogs.</description>
+	<linkedResources></linkedResources>
+	<folders>
+		<sourceFolder>${sourceFolder}</sourceFolder>
+		<outputFolder>${outputFolder}</outputFolder>
+		<autoLibFolder>lib</autoLibFolder>
+	</folders>
+	<contentCreation processFileExtensions="as,mxml,xml,launch,html">
+		<file src="as/Main.as" dest="src/Main.as" process="true" />
+		<file src="as/FdtSwfPluginIcon.as" dest="src/FdtSwfPluginIcon.as" process="true" />
+		<folder src="swc" dest="lib" process="true" />
+		<folder src="assets" dest="assets" process="true"/>
+	</contentCreation>
+</tns:projectTemplate>

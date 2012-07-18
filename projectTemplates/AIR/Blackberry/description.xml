@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:projectTemplate xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://fdt.powerflasher.com/ProjectTemplate ../../projectTemplate.xsd">
+	<name>Blackberry</name>
+	<version>2.5</version>
+	<description>FDT will setup a basic project targeting the ${targetPlatform} platform. 
+		${newline}A description.xml will be copied from the selected SDK to your project and pre populated with the fields set below. A bar-descriptor.xml file will be copied from the Blackberry SDK and added to your project as well. This template has a minimum requirement of the Blackberry plugin, Flex 4.5 and AIR 2.6 SDKs. 
+		</description>	<projectType>${projectType}</projectType>
+	<variables>
+		<primaryGroup label="">	
+			<group label="Application Setup">
+				<variable name="appId" label="Application ID:" default="com.powerflasher.SampleApp"
+					type="string" />
+				<variable name="appName" label="Application Title:" default="My Application"
+					type="string" />
+				<variable name="appVersion" label="Application Version:" default="1.0.0"
+					type="string" />				
+			</group>
+			<group label="Project Setup">
+				<variable name="selectedSDK" label="Default SDK"
+						default="_highest" type="sdk(4.5,4.9,2.6,4)" />									
+				<variable name="addPlaybookLibraries" label="Add Blackberry libraries"
+							default="true" type="boolean" />				
+				<variable name="useFlex" label="Add Flex Framework"
+					default="false" type="boolean" />				
+			</group>
+		</primaryGroup>				
+	</variables>
+	<extensions dispensable="blackBerry">
+		<blackBerry>
+			<createBarDescriptor destDir="bin" if="${targetPlatform}=='BlackBerry'"/>
+			<addBBTLibraries if="${addPlaybookLibraries}"/>			
+		</blackBerry>
+		<mobile>
+		      <createDescriptor platform="${targetPlatform}" file="bin/${projectName}-app.xml"/>	
+              <setProperty platform="${targetPlatform}" name="ACTIVE" value="true"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPNAME" value= "${appName}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPID" value= "${appId}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPFILENAME" value= "${fileName}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPVERSION" value= "${appVersion}"/>
+		</mobile>		
+	</extensions>	
+	<expressions>
+		<!--Blackberry error check-->		
+		<expression name="missingSDKWarning">This template requires the Flex 4.5 SDK or later.</expression>
+		<expression name="hasMinimumSDK" value="sdkVersionExists('4.5','4.9')"/>
+		<expression name="templateError" value="if(!${hasMinimumSDK},${missingSDKWarning},'')"/>		
+		<expression name="blackBerryWarning">The BlackBerry plugin is not installed. Visit http://fdt.powerflasher.com/blackberry-for-fdt/ to get it.</expression>
+		<expression name="blackBerrySdkWarning">The BlackBerry SDK is not installed. Visit http://fdt.powerflasher.com/blackberry-for-fdt/ to get it.</expression>
+		<expression name="fail" value="and(${targetPlatform}=='BlackBerry',!hasExtension('blackBerry'))"/>
+		<expression name="targetPlatform" value="'BlackBerry'" />
+		<expression name="templateError" value="if(${fail},${blackBerryWarning},if(${hasBBTSdk},'',${blackBerrySdkWarning}))"/>		
+		<expression name="projectType" value="if(${useFlex},'AIR Mobile Flex','AIR Mobile')" />
+		<expression name="postFileName" value="replaceRegex(${projectName}, '([^\w]+)', '')" />
+		<expression name="fileName" value="replaceRegex(${postFileName}, '(^\d+)', '')" />
+		<expression name="packageStructure" value="replaceRegex(${appId}, '([.]+)', '/')" />		
+		<expression name="sourceFolder" value="src" />		
+		<expression name="outputFolder" value="bin" />				
+		<expression name="autoLibFolder" value="lib" />						
+	</expressions>
+	<folders>
+		<sourceFolder>${sourceFolder}</sourceFolder>
+		<outputFolder>${outputFolder}</outputFolder>
+		<autoLibFolder>${autoLibFolder}</autoLibFolder>
+	</folders>
+
+	<contentCreation processFileExtensions="mxml,xml,launch,properties,as">
+		<!-- If AS -->
+		<file src="as/start.as" dest="${sourceFolder}/${packageStructure}/${fileName}.as" if="!${useFlex}"/>		
+		<!-- If Flex -->
+		<file src="mxml/viewNavApp.mxml" dest="${sourceFolder}/${packageStructure}/${fileName}.mxml" if="${useFlex}"/>
+		<file src="mxml/homeView.mxml" dest="${sourceFolder}/${packageStructure}/views/HomeView.mxml" if="${useFlex}"/>		
+	</contentCreation>
+</tns:projectTemplate>
+

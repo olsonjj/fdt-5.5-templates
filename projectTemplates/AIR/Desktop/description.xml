@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:projectTemplate xmlns:tns="http://fdt.powerflasher.com/ProjectTemplate"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://fdt.powerflasher.com/ProjectTemplate ../../projectTemplate.xsd">
+	<name>Desktop</name>
+	<version>2.5</version>
+	<description>FDT will setup a basic project targeting the ${targetPlatform} platform. 
+		${newline}A description.xml will be copied from the selected SDK to your project and pre populated with the fields set below.
+		</description>
+	<projectType>${projectType}</projectType>
+	<variables>
+		<primaryGroup label="">	
+			<group label="Application Setup">
+				<variable name="appId" label="Application ID:" default="com.powerflasher.SampleApp"
+					type="string" />
+				<variable name="appName" label="Application Title:" default="My Application"
+					type="string" />
+				<variable name="appVersion" label="Application Version:" default="1.0"
+					type="string" />				
+			</group>
+			<group label="Project Setup">
+				<variable name="selectedSDK" label="Default SDK"
+						default="_highest" type="sdk(3.6,4.9,1.0,4)" />									
+				<variable name="useFlex" label="Use Flex Framework"
+					default="false" type="boolean" />				
+			</group>		
+		</primaryGroup>				
+	</variables>
+	<extensions>
+		<mobile>
+              <setProperty platform="${targetPlatform}" name="ACTIVE" value="true"/>
+		      <createDescriptor platform="${targetPlatform}" file="bin/${projectName}-app.xml"/>	
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPNAME" value= "${appName}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPID" value= "${appId}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPFILENAME" value= "${fileName}"/>
+		      <setDescriptorProperty platform="${targetPlatform}" name="APPVERSION" value= "${appVersion}"/>
+		</mobile>
+	</extensions>	
+	<expressions>
+		<expression name="missingSDKWarning">This template requires the Flex 3.6 SDK or later.</expression>
+		<expression name="hasMinimumSDK" value="sdkVersionExists('3.6','4.9')"/>
+		<expression name="templateError" value="if(!${hasMinimumSDK},${missingSDKWarning},'')"/>						
+		<expression name="projectType" value="if(${useFlex},'AIR Flex','AIR')" />
+		<expression name="targetPlatform" value="'AirDesktop'" />
+		<expression name="preferredSdk" value="${selectedSDK}"/>
+		<expression name="postFileName" value="replaceRegex(${projectName}, '([^\w]+)', '')" />
+		<expression name="fileName" value="replaceRegex(${postFileName}, '(^\d+)', '')" />
+		<expression name="packageStructure" value="replaceRegex(${appId}, '([.]+)', '/')" />
+		<expression name='isFlex3' value="sdkHasLib(${selectedSDK},'frameworks/libs/flex.swc')  &amp;&amp; ${useFlex}"/>		
+		<expression name='isFlex4' value="sdkHasLib(${selectedSDK},'frameworks/libs/mx/mx.swc')  &amp;&amp; ${useFlex}"/>		
+		<expression name="sourceFolder" value="src" />		
+		<expression name="outputFolder" value="bin" />				
+		<expression name="autoLibFolder" value="lib" />				
+	</expressions>
+	<folders>
+		<sourceFolder>${sourceFolder}</sourceFolder>
+		<outputFolder>${outputFolder}</outputFolder>
+		<autoLibFolder>${autoLibFolder}</autoLibFolder>
+	</folders>
+	<contentCreation processFileExtensions="mxml,xml,launch,properties,as">
+		<!-- If AS -->
+		<file src="as/start.as" dest="${sourceFolder}/${packageStructure}/${fileName}.as" if="!${useFlex}"/>		
+		<!-- If Flex 3 -->
+		<file src="mxml/blank_mx.mxml" dest="${sourceFolder}/${packageStructure}/${fileName}.mxml" if="${isFlex3}"/>
+		<!-- If Flex 4 -->
+		<file src="mxml/blank_spark.mxml" dest="${sourceFolder}/${packageStructure}/${fileName}.mxml" if="${isFlex4}"/>
+	</contentCreation>
+</tns:projectTemplate>
+
